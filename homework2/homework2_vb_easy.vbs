@@ -21,7 +21,8 @@ Sub homework2_vb_easy()
     
         For i = 2 To num_of_rows
             If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
-                total_volumn = WorksheetFunction.Sum(ws.Range("G" & starting_row, "G" & i))
+                total_volumn = WorksheetFunction.Sum(ws.Range(Cells(starting_row, 7), Cells(i, 7))
+                ' total_volumn = WorksheetFunction.Sum(ws.Range("G" & starting_row, "G" & i))
                 'MsgBox ("total: " & total_volumn)
                 ws.Cells(result_count, 9).Value = ws.Cells(i, 1).Value
                 ws.Cells(result_count, 10).Value = total_volumn
