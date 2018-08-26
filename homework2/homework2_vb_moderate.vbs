@@ -10,32 +10,77 @@
 Sub homework2_vb_moderate()
 
     Dim total_volumn As Double
-    Dim result_row_count As Integer
+    Dim num_of_rows As Long
+    Dim result_row_count As Long
     Dim starting_row As Long
+    Dim percent_change As Double
+    Dim open_price As Double
+    Dim close_price As Double
     
     For Each ws In Worksheets
-
-        total_volumn = 0
-        starting_row = 2
-        ws.Cells(1, 9).Value = "Ticker"
-        ws.Cells(1, 10).Value = "Totel Stock Volumn"
-    
+        
         'num_of_rows = Worksheets("Sheet1").Cells(Rows.Count, "A").End(xlUp).Row
         num_of_rows = ws.Cells(Rows.Count, "A").End(xlUp).Row
+        result_row_count = 1
+        starting_row = 2
 
-        ws.Range("G1", "G" & num_of_rows).Clear
-    
-        'MsgBox ("number of rows: " & num_of_rows)
-        result_count = 2
+        'num_of_rows_result = ws.Cells(Rows.Count, "I").End(xlUp).Row
+        'ws.Range("I1", "N" & num_of_rows).Clear
+
+        ws.Cells(result_row_count, 9).Value = "Ticker"
+        ws.Cells(result_row_count, 10).Value = "Yearluy Change"
+        ws.Cells(result_row_count, 11).Value = "Percent Change"
+        ws.Cells(result_row_count, 12).Value = "Totel Stock Volumn"
+        ws.Cells(result_row_count, 13).Value = "Open Price"
+        ws.Cells(result_row_count, 14).Value = "Close Price"
     
         For i = 2 To num_of_rows
+
             If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
-                total_volumn = WorksheetFunction.Sum(ws.Range(Cells(starting_row, 7), Cells(i, 7)))
-                ' total_volumn = WorksheetFunction.Sum(ws.Range("G" & starting_row, "G" & i))
-                'MsgBox ("total: " & total_volumn)
-                ws.Cells(result_count, 9).Value = ws.Cells(i, 1).Value
-                ws.Cells(result_count, 10).Value = total_volumn
-                result_count = result_count + 1
+
+                result_row_count = result_row_count + 1
+                total_volumn = WorksheetFunction.Sum(ws.Range(ws.Cells(starting_row, 7), ws.Cells(i, 7)))
+                
+                open_price = ws.Cells(starting_row, 3).Value
+                close_price = ws.Cells(i, 6).Value
+                      
+                If open_price = 0 Then
+                    For j = starting_row To i
+                        If ws.Cells(j, 3).Value <> 0 Then
+                            open_price = ws.Cells(j, 3).Value
+                            Exit For
+                        End If
+                    Next j
+                End If
+                
+                If close_price = 0 Then
+                    For k = i To starting_row Step -1
+                        If ws.Cells(k, 6).Value <> 0 Then
+                            close_price = ws.Cells(k, 6).Value
+                            Exit For
+                        End If
+                    Next k
+                End If
+
+                yearly_change = close_price - open_price
+                If open_price = 0 Then
+                    percent_change = 0
+                Else
+                    percent_change = yearly_change / open_price
+                End If
+
+                ws.Cells(result_row_count, 9).Value = ws.Cells(i, 1).Value
+                ws.Cells(result_row_count, 10).Value = yearly_change
+                If percent_change > 0 Then
+                    ws.Cells(result_row_count, 11).Interior.ColorIndex = 4
+                Else
+                    ws.Cells(result_row_count, 11).Interior.ColorIndex = 3
+                End If
+                ws.Cells(result_row_count, 11).Value = Format(Str(percent_change), "Percent")
+                ws.Cells(result_row_count, 12).Value = total_volumn
+                ws.Cells(result_row_count, 13).Value = open_price
+                ws.Cells(result_row_count, 14).Value = close_price
+                           
                 starting_row = i + 1
             End If
         Next i

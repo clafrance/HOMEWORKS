@@ -15,7 +15,9 @@ Sub homework2_vb_easy()
     
         'num_of_rows = Worksheets("Sheet1").Cells(Rows.Count, "A").End(xlUp).Row
         num_of_rows = ws.Cells(Rows.Count, "A").End(xlUp).Row
-        ws.Range("I1", "L" & num_of_rows).Clear
+
+        num_of_rows_result = ws.Cells(Rows.Count, "I").End(xlUp).Row
+        ws.Range("I1", "L" & num_of_rows_result).Clear
 
         ws.Cells(result_row, 9).Value = "Ticker"
         ws.Cells(result_row, 10).Value = "Totel Stock Volumn"
